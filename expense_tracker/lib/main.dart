@@ -1,4 +1,5 @@
 import 'package:expense_tracker/pages/current_expenses_page.dart';
+import 'package:expense_tracker/pages/expense_history_page.dart';
 import 'package:expense_tracker/pages/home_page.dart';
 import 'package:flutter/material.dart';
 
@@ -34,6 +35,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final List _pages = [
     const HomePage(),
     const CurrentExpensesPage(),
+    const ExpenseHistoryPage(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -69,6 +71,13 @@ class _MyHomePageState extends State<MyHomePage> {
               icon: Icon(Icons.payments_outlined,
                   color: Colors.black, size: 30.0),
               label: 'Expenses',
+            ),
+            NavigationDestination(
+              selectedIcon:
+                  Icon(Icons.history, color: Colors.white, size: 30.0),
+              icon:
+                  Icon(Icons.history_outlined, color: Colors.black, size: 30.0),
+              label: 'History',
             ),
           ],
         ),
