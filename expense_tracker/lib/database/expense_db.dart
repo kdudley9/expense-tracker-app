@@ -52,4 +52,21 @@ class ExpenseDB {
       debugPrint('$err');
     }
   }
+
+  static Future<List<Map<String, dynamic>>> getExpensesForMonth(
+      String month, int year) async {
+    final database = await DatabaseService().database;
+    final startDate = '$year-$month-01';
+    final endDate = '$year-${_getNextMonth(month)}-01';
+    return database.query('expenses',
+        where: 'createdAt >= ? AND createdAt < ?',
+        whereArgs: [startDate, endDate],
+        orderBy: 'createdAt');
+  }
+
+  static String _getNextMonth(String month) {
+    final monthIndex = DateTime.parse('2024-$month-01').month;
+    final nextMonthIndex = (monthIndex % 12) + 1;
+    return nextMonthIndex.toString().padLeft(2, '0');
+  }
 }
