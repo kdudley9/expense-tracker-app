@@ -105,6 +105,9 @@ class _ExpenseHistoryPageState extends State<ExpenseHistoryPage> {
       itemCount: expenses.length,
       itemBuilder: (context, index) {
         final expense = expenses[index];
+        final amount = expense['amount'] as double; // Cast amount to double
+        final formattedAmount =
+            amount.toStringAsFixed(2); // Format amount to two decimal places
         return ListTile(
           title: Text(
             expense['title'],
@@ -114,7 +117,7 @@ class _ExpenseHistoryPageState extends State<ExpenseHistoryPage> {
             '${expense['category']}',
           ),
           trailing: Text(
-            '\$${expense['amount']}',
+            '\$$formattedAmount',
             style: const TextStyle(
               fontSize: 16,
               color: Color.fromRGBO(57, 181, 74, 1),
