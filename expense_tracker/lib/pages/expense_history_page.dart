@@ -103,11 +103,11 @@ class _ExpenseHistoryPageState extends State<ExpenseHistoryPage> {
   Widget _buildExpenseList(List<Map<String, dynamic>> expenses) {
     return ListView.builder(
       itemCount: expenses.length,
+      reverse: true,
       itemBuilder: (context, index) {
         final expense = expenses[index];
-        final amount = expense['amount'] as double; // Cast amount to double
-        final formattedAmount =
-            amount.toStringAsFixed(2); // Format amount to two decimal places
+        final amount = expense['amount'] as double;
+        final formattedAmount = amount.toStringAsFixed(2);
         return ListTile(
           title: Text(
             expense['title'],
