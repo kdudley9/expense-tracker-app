@@ -1,26 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:expense_tracker/database/expense_db.dart';
+import 'package:intl/intl.dart';
 
 class MyPieChart extends StatelessWidget {
-  const MyPieChart({Key? key});
+  const MyPieChart({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(40.0), // Add padding of 15 around the pie chart
+      padding:
+          const EdgeInsets.all(40.0), // Add padding of 15 around the pie chart
       child: FutureBuilder<List<Map<String, dynamic>>>(
         future: fetchExpenseData(), // Call a method to fetch expense data
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator(); // Show loading indicator while data is being fetched
+            return const CircularProgressIndicator(); // Show loading indicator while data is being fetched
           } else {
             if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}'); // Show error if data fetching fails
+              return Text(
+                  'Error: ${snapshot.error}'); // Show error if data fetching fails
             } else {
               return PieChart(
                 PieChartData(
-                  sections: buildPieChartSections(snapshot.data!), // Build pie chart sections using fetched data
+                  sections: buildPieChartSections(snapshot.data!),
+                  centerSpaceRadius: 50.0,
                 ),
               );
             }
@@ -31,12 +35,12 @@ class MyPieChart extends StatelessWidget {
   }
 
   Future<List<Map<String, dynamic>>> fetchExpenseData() async {
-    // Fetch expenses data from database
-    return ExpenseDB.getExpenses();
+    return ExpenseDB.getExpensesForMonth(
+        DateFormat('MM').format(DateTime.now()), DateTime.now().year);
   }
 
-  List<PieChartSectionData> buildPieChartSections(List<Map<String, dynamic>> expenses) {
-    // Calculate total amount of all expenses
+  List<PieChartSectionData> buildPieChartSections(
+      List<Map<String, dynamic>> expenses) {
     double totalAmount = 0;
     expenses.forEach((expense) {
       totalAmount += expense['amount'];
@@ -49,25 +53,42 @@ class MyPieChart extends StatelessWidget {
       double amount = expense['amount'];
       double percentage = (amount / totalAmount) * 100;
       if (categoryPercentage.containsKey(category)) {
-        categoryPercentage[category] = (categoryPercentage[category] ?? 0) + percentage;
+        categoryPercentage[category] =
+            (categoryPercentage[category] ?? 0) + percentage;
       } else {
         categoryPercentage[category] = percentage;
       }
     });
 
-    // Build pie chart sections
+    List<Color> colors = [
+      Colors.red,
+      Colors.blue,
+      Colors.green,
+      Colors.yellow,
+      Colors.orange,
+      Colors.purple,
+      Colors.teal,
+      Colors.pink,
+      Colors.indigo,
+      Colors.cyan
+    ];
+
     List<PieChartSectionData> sections = [];
+    int index = 0;
     categoryPercentage.forEach((category, percentage) {
       sections.add(
         PieChartSectionData(
           value: percentage,
-          title: '$category\n${percentage.toStringAsFixed(2)}%', // Display category and its percentage contribution
+          title: '$category\n${percentage.toStringAsFixed(2)}%',
+          titleStyle:
+              const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
           showTitle: true,
-          titlePositionPercentageOffset: 1.2, // Position title outside of the pie chart
+          titlePositionPercentageOffset: 1.3,
           radius: 70,
-          color: const Color(0xFF2B362D),
+          color: colors[index % colors.length],
         ),
       );
+      index++;
     });
     return sections;
   }
