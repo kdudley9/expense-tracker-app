@@ -6,5 +6,5 @@ Kenneth Dudley
 Keidra Floyd
 
 
-# YouTube Video Link
+# Link to Presentation
 https://youtu.be/PnfXw2PpD1w 
